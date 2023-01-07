@@ -12,4 +12,3 @@ edition = "2021"
 
 [build-dependencies]
 bindgen = "0.63.0"
-cc = {version = "1.0.78"}
