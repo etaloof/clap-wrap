@@ -15,4 +15,4 @@ static = []
 
 [build-dependencies]
 bindgen = "0.63.0"
-cc = {version = "1.0.78", features = ["parallel"] }
+cc = {version = "1.0.78"}

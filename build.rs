@@ -1,13 +1,17 @@
 use bindgen;
 use cc;
+use std::path::Path;
 
 fn main() {
 
+    //let cur_dir = std::env::current_dir().unwrap();
+
     cc::Build
-        ::new()
-        .include("clap-main")
+        ::new()        
+        .include(Path::new("C:/projects/RUST/clap-wrap/clap-main/include/clap"))
+        .includes(Path::new("C:/projects/RUST/clap-wrap/clap-main/src"))
         .compile("clapc");
-  
+
     let bindings = 
         bindgen::Builder
             ::default()
@@ -15,10 +19,11 @@ fn main() {
             .generate()
             .expect("Failed to generate bindings");
 
-    let out_path = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap());
+    //let out_path = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap());
 
     bindings   
-        .write_to_file("src/bindings.rs")
+        .write_to_file(Path::new("C:/projects/RUST/clap-wrap/src/bindings.rs"))
         .expect("Failed to write bindings");
+        
 
 }
