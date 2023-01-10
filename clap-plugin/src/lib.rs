@@ -1,6 +1,6 @@
 use clap_wrap::{
     clap_host_t, clap_plugin_descriptor_t, clap_plugin_entry_t, clap_plugin_factory,
-    clap_plugin_factory_t, clap_plugin_t, clap_version_t, CLAP_PLUGIN_FACTORY_ID,
+    clap_plugin_factory_t, clap_plugin_t, clap_version_t,
 };
 use libc::{c_char, c_void};
 use std::ptr::null_mut;
@@ -59,4 +59,20 @@ unsafe extern "C" fn create_plugin(
     plugin_id: *const c_char,
 ) -> *const clap_plugin_t {
     todo!()
+}
+
+#[no_mangle]
+pub static CLAP_PLUGIN_FACTORY_ID: [::std::os::raw::c_char; 20usize] = unsafe {
+    /// TODO: Rewrite using std::array::map once it is stable
+    std::mem::transmute(*b"my.clap.plugin.id\0\0\0")
+};
+
+#[no_mangle]
+pub unsafe extern "C" fn load_plugin() -> *const c_char {
+    // TODO: load plugin
+
+    // Safety:
+    // - Returning a pointer to string literal is valid
+    // - We added the null terminator
+    "Plugin loaded\0".as_ptr() as *const c_char
 }
