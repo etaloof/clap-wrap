@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 libloading = "0.7"
 cmd_lib = "1.3.0"
+clap-wrap = { path = ".." }

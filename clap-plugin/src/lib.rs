@@ -3,10 +3,11 @@ use clap_wrap::{
     clap_plugin_factory_t, clap_plugin_t, clap_version_t,
 };
 use libc::{c_char, c_void};
-use std::ptr::null_mut;
+use std::ffi::CStr;
+use std::ptr::{eq, null_mut};
 
 // This constant corresponds to the `CLAP_VERSION_INIT` macro in `version.h`.
-const CLAP_VERSION_INIT: clap_version_t = clap_version_t {
+pub const CLAP_VERSION_INIT: clap_version_t = clap_version_t {
     major: 1,
     minor: 1,
     revision: 6,
@@ -28,10 +29,10 @@ unsafe extern "C" fn deinit() {}
 
 unsafe extern "C" fn get_factory(factory_id: *const c_char) -> *const c_void {
     let equal = unsafe { libc::strcmp(factory_id, CLAP_PLUGIN_FACTORY_ID.as_ptr()) };
-    if equal != 1 {
-        null_mut()
-    } else {
+    if equal == 0 {
         std::ptr::addr_of!(plugin_factory).cast()
+    } else {
+        null_mut()
     }
 }
 
@@ -66,13 +67,3 @@ pub static CLAP_PLUGIN_FACTORY_ID: [::std::os::raw::c_char; 20usize] = unsafe {
     /// TODO: Rewrite using std::array::map once it is stable
     std::mem::transmute(*b"my.clap.plugin.id\0\0\0")
 };
-
-#[no_mangle]
-pub unsafe extern "C" fn load_plugin() -> *const c_char {
-    // TODO: load plugin
-
-    // Safety:
-    // - Returning a pointer to string literal is valid
-    // - We added the null terminator
-    "Plugin loaded\0".as_ptr() as *const c_char
-}
